@@ -6,6 +6,15 @@ var DuplicateTabCount = 0;
 var Tabset = new Set();
 var DuplicateTabs = new Array();
 
+function cleanDuplicates(DuplicateTabs) {
+    DuplicateTabs.forEach(element => {
+        chrome.runtime.sendMessage({
+            action: "deleteDuplicate",
+            tabid: element.id
+        });
+    });
+}
+
 chrome.runtime.sendMessage({
     action: "getAllTabs"
 }, function(response) {
@@ -35,8 +44,6 @@ chrome.runtime.sendMessage({
     });
     if (TotalTabCount - Tabset.size > 0) {
         console.log("Duplicates: " + (TotalTabCount - Tabset.size));
-        DuplicateTabs.forEach(element => {
-            console.log(element);
-        });
+        cleanDuplicates(DuplicateTabs);
     }
 });

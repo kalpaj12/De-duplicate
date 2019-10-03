@@ -6,6 +6,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             });
             return true;
         });
+    } else if (msg.action.localeCompare("deleteDuplicate") === 0) {
+        chrome.tabs.remove(msg.tabid);
     }
     return true;
 });
