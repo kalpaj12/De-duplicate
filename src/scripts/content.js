@@ -7,7 +7,7 @@ var Tabset = new Set();
 var DuplicateTabs = new Array();
 
 function cleanDuplicates(DuplicateTabs) {
-    DuplicateTabs.forEach(element => {
+    DuplicateTabs.forEach((element) => {
         chrome.runtime.sendMessage({
             action: "deleteDuplicate",
             tabid: element.id
@@ -18,18 +18,17 @@ function cleanDuplicates(DuplicateTabs) {
 chrome.runtime.sendMessage({
     action: "getAllTabs"
 }, function(response) {
-    response.data.forEach(element => {
+    response.data.forEach((element) => {
         if (element.incognito === false) {
             if (element.url.includes(GreatSuspenderDomain)) {
-                var url_begin = element.url.indexOf("&uri=");
-                element.url = element.url.substring(url_begin + 5);
+                var urlBegin = element.url.indexOf("&uri=");
+                element.url = element.url.substring(urlBegin + 5);
             }
-
             Tabset.add(element.url);
             TotalTabCount++;
             DuplicateTabCount++;
 
-            if (DuplicateTabCount != Tabset.size) {
+            if (DuplicateTabCount !== Tabset.size) {
 
                 var tabInfo = {
                     id: element.id,
@@ -43,7 +42,7 @@ chrome.runtime.sendMessage({
         }
     });
     if (TotalTabCount - Tabset.size > 0) {
-        console.log("Duplicates: " + (TotalTabCount - Tabset.size));
+        // console.log("Duplicates: " + (TotalTabCount - Tabset.size));
         cleanDuplicates(DuplicateTabs);
     }
 });
