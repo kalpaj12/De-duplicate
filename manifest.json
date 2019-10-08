@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "De-duplicate",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": "Kalpaj Agrawalla",
     "description": "Close duplicate tabs",
     "browser_action": {
@@ -11,10 +11,10 @@
         "scripts": [
             "src/scripts/background.js"
         ],
-        "persistent": true
+        "persistent": false
     },
     "content_scripts": [{
-        "run_at": "document_idle",
+        "run_at": "document_start",
         "all_frames": false,
         "matches": [
             "<all_urls>"
@@ -26,9 +26,6 @@
     "minimum_chrome_version": "75",
     "permissions": [
         "<all_urls>",
-        "tabs",
-        "storage",
-        "contextMenus",
-        "contentSettings"
+        "tabs"
     ]
 }

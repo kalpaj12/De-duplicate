@@ -53,7 +53,13 @@ chrome.runtime.sendMessage({
             }
         }
     });
+
+    console.log("Total non-incognito Tabs: " + totalTabCount);
     if (duplicateTabCount > 0) {
+        console.log("Duplicate non-incognito Tabs: " + duplicateTabCount);
+        // duplicateTabinfo.forEach((element) => {
+        //     console.log(element);
+        // });
         cleanDuplicates(duplicateTabinfo);
     }
 });
