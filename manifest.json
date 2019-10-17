@@ -1,11 +1,19 @@
 {
     "manifest_version": 2,
     "name": "De-duplicate",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "author": "Kalpaj Agrawalla",
     "description": "Close duplicate tabs",
+    "icons": {
+        "16": "src/icons/16.png",
+        "32": "src/icons/32.png",
+        "48": "src/icons/48.png",
+        "64": "src/icons/64.png",
+        "128": "src/icons/128.png"
+    },
     "browser_action": {
-        "default_title": "De-duplicate"
+        "default_title": "De-duplicate",
+        "default_icon": "src/icons/32.png"
     },
     "background": {
         "scripts": [
@@ -23,7 +31,7 @@
             "src/scripts/content.js"
         ]
     }],
-    "minimum_chrome_version": "75",
+    "minimum_chrome_version": "70",
     "permissions": [
         "<all_urls>",
         "tabs"
