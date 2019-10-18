@@ -1,3 +1,5 @@
+'use strict';
+
 var greatSuspenderDomain = "chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html";
 
 var totalTabCount = 0;

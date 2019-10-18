@@ -1,9 +1,10 @@
 {
     "manifest_version": 2,
     "name": "De-duplicate",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "Kalpaj Agrawalla",
-    "description": "Close duplicate tabs",
+    "description": "Auto-close duplicate tabs",
+    "minimum_chrome_version": "70",
     "icons": {
         "16": "src/icons/16.ico",
         "32": "src/icons/32.ico",
@@ -12,8 +13,15 @@
         "128": "src/icons/128.ico"
     },
     "browser_action": {
-        "default_title": "De-duplicate",
-        "default_icon": "src/icons/32.ico"
+        "default_title": "Click to access settings of this extension.",
+        "default_icon": {
+            "16": "src/icons/16.ico",
+            "32": "src/icons/32.ico",
+            "48": "src/icons/48.ico",
+            "64": "src/icons/64.ico",
+            "128": "src/icons/128.ico"
+        },
+        "default_popup": "src/html/popup.html"
     },
     "background": {
         "scripts": [
@@ -28,12 +36,18 @@
             "<all_urls>"
         ],
         "js": [
+            "src/scripts/jquery-3.4.1.min.js",
             "src/scripts/content.js"
         ]
     }],
-    "minimum_chrome_version": "70",
+    "options_ui": {
+        "page": "src/html/options.html",
+        "open_in_tab": false
+    },
     "permissions": [
         "<all_urls>",
-        "tabs"
+        "tabs",
+        "storage",
+        "contextMenus"
     ]
 }
