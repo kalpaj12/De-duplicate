@@ -55,6 +55,12 @@ chrome.runtime.sendMessage({
     });
 
     console.log("Total non-incognito Tabs: " + totalTabCount);
+
+    chrome.runtime.sendMessage({
+        action: "setBadgeText",
+        text: nonduplicateTabCount.toString()
+    });
+
     if (duplicateTabCount > 0) {
         console.log("Duplicate non-incognito Tabs: " + duplicateTabCount);
         // duplicateTabinfo.forEach((element) => {

@@ -1,3 +1,7 @@
+chrome.browserAction.setBadgeBackgroundColor({
+    color: [0, 0, 0, 255]
+});
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.action.localeCompare("getAllTabs") === 0) {
         chrome.tabs.query({}, function(tabs) {
@@ -15,6 +19,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             chrome.windows.update(tab.windowId, {
                 focused: true
             });
+        });
+    } else if (msg.action.localeCompare("setBadgeText") === 0) {
+        chrome.browserAction.setBadgeText({
+            text: msg.text
         });
     }
     return true;

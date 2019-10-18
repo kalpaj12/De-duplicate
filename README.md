@@ -1,6 +1,6 @@
 <div align="center">
   <h1>
-    <img src="/src/icons/64.png" alt="Icon.png"/>  De-duplicate
+    <img src="/src/icons/64.ico" alt="Icon.ico"/>  De-duplicate
   </h1>
 </div>
 
