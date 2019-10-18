@@ -4,7 +4,11 @@
   </h1>
 </div>
 
-Close duplicate tabs on browsers based on chromium.
+Automatically detects and closes duplicate tabs on browsers based on chromium. Once a duplicate is closed, the window shifts focus to the non-duplicate tab-id.
+
+
+## Additional features included:
+1. Non-duplicate tab count is displayed on the extension icon.
 
 ## Procedure to use this browser extension (unpacked)
 
