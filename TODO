@@ -1,0 +1,17 @@
+Complete popup and options
+Add whitelist options
+Allow to switch between tabs via search shortcut
+
+Fix open issues
+
+In popup:
+Store closed duplicates count
+view blacklisted sites && domains
+
+Available advanced settings in options:
+Switch when duplicate is found?
+Add url/domain to blacklist
+close option immediately after save or not
+
+Rightclick:
+Add url/domain to blacklist
