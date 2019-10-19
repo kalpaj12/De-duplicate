@@ -40,7 +40,7 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
     }
 });
 
-// Messages route
+// Messages listeners
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.action.localeCompare("getAllTabs") === 0) {
         chrome.tabs.query({}, function(tabs) {
@@ -65,4 +65,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         });
     }
     return true;
+});
+
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+    chrome.tabs.query({}, function(tabs) {
+        // also, update the saved nonduplicate info
+        chrome.browserAction.setBadgeText({
+            text: tabs.length.toString()
+        });
+    });
 });

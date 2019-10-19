@@ -1,6 +1,3 @@
-Fix open issue:
-    update actionBadge text (#4)
-
 Rightclick:
     Change right click =>  navigate to advanced options directly when backlist is clicked
     Add url/domain to blacklist directly from right click
@@ -25,6 +22,8 @@ Also,
         About me:
             Details about me
             Donation info
+
+update non duplicate tab info when a tab is closed (in background.js)
 
 update README
     Add all additional info

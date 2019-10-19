@@ -23,6 +23,7 @@ function cleanDuplicates(duplicateTabinfo) {
     });
 }
 
+// Message to background.js
 chrome.runtime.sendMessage({
     action: "getAllTabs"
 }, function(response) {
@@ -63,6 +64,10 @@ chrome.runtime.sendMessage({
         text: nonduplicateTabCount.toString()
     });
 
+    chrome.storage.sync.set({
+        'Deduplicate': nonduplicateTabinfo
+    });
+
     if (duplicateTabCount > 0) {
         console.log("Duplicate non-incognito Tabs: " + duplicateTabCount);
         // duplicateTabinfo.forEach((element) => {
@@ -70,4 +75,12 @@ chrome.runtime.sendMessage({
         // });
         cleanDuplicates(duplicateTabinfo);
     }
+});
+
+// Message from background.js
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.sender.localeCompare("kalpajag_deduplicate") === 0) {
+
+    }
+    return true;
 });
