@@ -4,6 +4,9 @@ Impt:
     Default blacklist chrome://*
     Fix cannot find tab id when multiple duplicates are spawned
 
+Will not be fixed
+    Large number of tabs are opened => check for duplicacy then
+
 Rightclick:
     Add url/domain to blacklist directly from right click
 

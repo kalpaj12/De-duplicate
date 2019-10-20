@@ -36,7 +36,16 @@ function switchNonDuplicate(tabInfo) {
 }
 
 function closeDuplicateTabs(tabId) {
-    chrome.tabs.remove(tabId);
+    chrome.tabs.get(tabId, function(tab) {
+        if (chrome.runtime.lastError) {
+            // This error can be ignored due
+            // to the fact that while cleaning up another tab, this tab was removed
+            // but was not updated to storage.local
+            console.log(chrome.runtime.lastError.message);
+        } else if (tab && tab.id) {
+            chrome.tabs.remove(tab.id);
+        }
+    });
 }
 
 function setBadgeText(text) {
@@ -51,14 +60,14 @@ function deleteDuplicatesAfterInitPhase() {
     var nonduplicateTabinfo = new Array();
 
     var chromeSync_synchoronous = new Promise((resolve, reject) => {
-        chrome.storage.sync.get(['Deduplicate'], function(result) {
+        chrome.storage.local.get(['Deduplicate'], function(result) {
             if ((['Deduplicate'] in result)) {
                 duplicateTabCount = result.Deduplicate.totalduplicatesclosed;
                 nonduplicateTabinfo = result.Deduplicate.nonduplicateTabinfo;
                 nonduplicateTabCount = nonduplicateTabinfo.length;
                 console.log("saved nonduplicatetabs: ", nonduplicateTabinfo);
             } else {
-                console.log("SYNC ERROR => couldnot find synced data");
+                console.error("SYNC ERROR => couldnot find synced data");
             }
             resolve();
         });
@@ -67,7 +76,7 @@ function deleteDuplicatesAfterInitPhase() {
     chromeSync_synchoronous.then(() => {
         console.log("running clean duplicates on newtab=>", newTabDetails);
         newTabDetails.forEach((element, pos, newTabDetails) => {
-            if (!element.incognito) {
+            if (!element.incognito && element.status == "complete") {
                 if (element.url.includes(greatSuspenderDomain)) {
                     var urlBegin = element.url.indexOf("&uri=");
                     element.url = element.url.substring(urlBegin + 5);
@@ -83,12 +92,18 @@ function deleteDuplicatesAfterInitPhase() {
                     closeDuplicateTabs(element.id);
                     // change focus
                 } else {
-                    nonduplicateTabinfo = nonduplicateTabinfo.concat(element);
+                    var tabInfo = {
+                        id: element.id,
+                        url: element.url,
+                        windowId: element.windowId,
+                        duplicateOfid: element.id
+                    };
+                    nonduplicateTabinfo = nonduplicateTabinfo.concat(tabInfo);
                     nonduplicateTabCount++;
                 }
             }
         });
-        chrome.storage.sync.set({
+        chrome.storage.local.set({
             Deduplicate: {
                 totalduplicatesclosed: duplicateTabCount,
                 nonduplicateTabinfo,
@@ -175,8 +190,8 @@ chrome.runtime.onInstalled.addListener(function() {
         setBadgeText(nonduplicateTabCount.toString());
 
         chromeSync_synchoronous.then(() => {
-            chrome.storage.sync.remove(['Deduplicate']);
-            chrome.storage.sync.set({
+            chrome.storage.local.remove(['Deduplicate']);
+            chrome.storage.local.set({
                 Deduplicate: {
                     totalduplicatesclosed: duplicateTabCount,
                     nonduplicateTabinfo,
@@ -227,20 +242,21 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                 }) => (url === tab.url) && (id !== tab.id));
 
                 if (isduplicate) {
+                    console.log("old tab is duplicate");
                     closeDuplicateTabs(tab.id);
                     // update nonduplicateTabinfo
-                    chrome.storage.sync.get(['Deduplicate'], function(result) {
+                    chrome.storage.local.get(['Deduplicate'], function(result) {
                         if ((['Deduplicate'] in result)) {
                             var totalduplicatesclosed = result.Deduplicate.totalduplicatesclosed;
                             totalduplicatesclosed++;
-                            chrome.storage.sync.set({
+                            chrome.storage.local.set({
                                 Deduplicate: {
                                     totalduplicatesclosed,
                                     nonduplicateTabinfo: result.Deduplicate.nonduplicateTabinfo
                                 }
                             });
                         } else {
-                            console.log("SYNC ERROR");
+                            console.error("SYNC ERROR");
                         }
                     });
                     setBadgeText((tabs.length - 1).toString());
@@ -253,16 +269,18 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
     console.log("onRemoved fired: ", tabId);
     chrome.tabs.query({}, function(tabs) {
-        chrome.storage.sync.get(['Deduplicate'], function(result) {
+        chrome.storage.local.get(['Deduplicate'], function(result) {
             if ((['Deduplicate'] in result)) {
                 const tab = result.Deduplicate.nonduplicateTabinfo.find(({
                     id
                 }) => id == tabId);
                 if (tab) {
                     var nonduplicateTabinfo = result.Deduplicate.nonduplicateTabinfo.filter(function(el) {
-                        return el.id != tabId;
+                        return el.id !== tabId;
                     });
-                    chrome.storage.sync.set({
+                    console.log("onRemoved cleanup nonduplicate", nonduplicateTabinfo);
+                    setBadgeText(nonduplicateTabinfo.length.toString());
+                    chrome.storage.local.set({
                         Deduplicate: {
                             totalduplicatesclosed: result.Deduplicate.totalduplicatesclosed,
                             nonduplicateTabinfo,
@@ -270,10 +288,29 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
                     });
                 }
             } else {
-                console.log("STORAGE SYNC ERROR!");
+                console.error("STORAGE SYNC ERROR!");
             }
         });
-        console.log("non duplicate tabs: ", tabs.length);
-        setBadgeText(tabs.length.toString());
+    });
+});
+
+chrome.windows.onRemoved.addListener(function(windowId) {
+    chrome.storage.local.get(['Deduplicate'], function(result) {
+        if ((['Deduplicate'] in result)) {
+            var nonduplicateTabinfo = result.Deduplicate.nonduplicateTabinfo.filter(function(el) {
+                return el.windowId !== windowId;
+            });
+            chrome.storage.local.set({
+                Deduplicate: {
+                    totalduplicatesclosed: result.Deduplicate.totalduplicatesclosed,
+                    nonduplicateTabinfo,
+                }
+            });
+            console.log("ON WINDOW CLOSE UPDATED");
+            console.log(nonduplicateTabinfo);
+            setBadgeText(nonduplicateTabinfo.length.toString());
+        } else {
+            console.error("SYNC ERROR");
+        }
     });
 });
