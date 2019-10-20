@@ -1,5 +1,10 @@
+Impt:
+    look into comments at background.js
+    remove history if it is a duplicate
+    Default blacklist chrome://*
+    Fix cannot find tab id when multiple duplicates are spawned
+
 Rightclick:
-    Change right click =>  navigate to advanced options directly when backlist is clicked
     Add url/domain to blacklist directly from right click
 
 Complete popup and options page layout
@@ -23,8 +28,6 @@ Also,
             Details about me
             Donation info
 
-update non duplicate tab info when a tab is closed (in background.js)
-
 update README
     Add all additional info
     Move note: greatsuspender to additional info
@@ -32,3 +35,5 @@ update README
 
 Upcoming Features:
     Allow to switch between tabs via search shortcut
+    Cross platform
+        Once cross platform is done, add to README

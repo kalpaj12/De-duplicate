@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "De-duplicate",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "author": "Kalpaj Agrawalla",
     "description": "Auto-close duplicate tabs",
     "minimum_chrome_version": "70",
@@ -29,17 +29,6 @@
         ],
         "persistent": false
     },
-    "content_scripts": [{
-        "run_at": "document_start",
-        "all_frames": false,
-        "matches": [
-            "<all_urls>"
-        ],
-        "js": [
-            "src/scripts/jquery-3.4.1.min.js",
-            "src/scripts/content.js"
-        ]
-    }],
     "options_ui": {
         "page": "src/html/options.html",
         "open_in_tab": false
