@@ -2,6 +2,7 @@ Impt:
     look into comments at background.js
     remove history if it is a duplicate
     Default blacklist chrome://*
+    Fix open issues
 
 Will not be fixed
     Large number of tabs are opened => check for duplicacy then
@@ -24,7 +25,6 @@ Also,
             do nothing
 
         Add url/domain to blacklist
-        close option menu immediately after save or not
         Add option to allow to switch between tabs via search shortcut
         About me:
             Details about me

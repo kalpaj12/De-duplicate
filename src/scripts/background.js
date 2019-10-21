@@ -147,6 +147,10 @@ chrome.runtime.onInstalled.addListener(function() {
         });
     }
 
+    chrome.runtime.openOptionsPage(function() {
+        console.log("options page opened");
+    });
+    // on the behaviour set at option.js, do the below
     getAllTabs(function(tabs) {
         var nonduplicateTabCount = 0;
         var duplicateTabCount = 0;
