@@ -1,20 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>De-duplicate</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" type="text/css">
-    <link rel="stylesheet" href="../css/popup.css">
-    <style>
-
-    </style>
+    <link type="text/css" href="../css/popup.css" rel="stylesheet">
 </head>
 
 <body>
-    <p>De-duplicate</p>
-    <button id="openPopup">Advanced Settings</button>
-    <script src="../scripts/popup.js"></script>
+    <div id="header">
+        <span id="ClosedduplicateCount">Closed duplicateCount</span>
+    </div>
+    <div id="popupContent">
+        <div class="group">
+            <div class="menuOption" id="urlblacklist">
+                <span class="optionText">Add current url to blacklist</span>
+            </div>
+            <div class="menuOption" id="domainblacklist">
+                <span class="optionText">Add current domain to blacklist</span>
+            </div>
+            <div class="menuOption" id="githubpage">
+                <span class="optionText">View Project on GitHub</span>
+            </div>
+        </div>
+
+        <div class="group">
+            <div class="menuOption">
+                <span class="optionText" id="openPopup">Advanced Settings</span>
+            </div>
+        </div>
+    </div>
 </body>
+<script src="../scripts/popup.js"></script>
 
 </html>
