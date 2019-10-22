@@ -39,8 +39,8 @@ function save_options() {
         var shouldclose = userSettings.find(({
             id
         }) => id === 'close-options-after-save').value;
-        if (shouldclose === true) {
-            window.close();
+        if (shouldclose == true) {
+            this.close();
         } else {
             setTimeout(function() {
                 status.textContent = '';

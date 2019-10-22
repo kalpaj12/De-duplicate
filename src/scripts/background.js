@@ -146,11 +146,9 @@ chrome.runtime.onInstalled.addListener(function() {
             contexts: ['all'],
         });
     }
+    chrome.runtime.openOptionsPage();
 
-    chrome.runtime.openOptionsPage(function() {
-        console.log("options page opened");
-    });
-    // on the behaviour set at option.js, do the below
+    // Make changes here according to settings from options.html
     getAllTabs(function(tabs) {
         var nonduplicateTabCount = 0;
         var duplicateTabCount = 0;
@@ -213,62 +211,62 @@ chrome.runtime.onInstalled.addListener(function() {
     });
 });
 
-chrome.tabs.onCreated.addListener(function(tab) {
-    newTabDetailsmutex = new Promise((resolve, reject) => {
-        console.log("new tab added:", tab);
-        newTabDetails.push(tab);
-        console.log("After addition of new tab, newTabdetails is:", newTabDetails);
-        resolve();
-    });
-});
+// chrome.tabs.onCreated.addListener(function(tab) {
+//     newTabDetailsmutex = new Promise((resolve, reject) => {
+//         console.log("new tab added:", tab);
+//         newTabDetails.push(tab);
+//         console.log("After addition of new tab, newTabdetails is:", newTabDetails);
+//         resolve();
+//     });
+// });
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (changeInfo.status && changeInfo.status === "complete") {
-        console.log("tab updated: ", tab);
-        const updateTabdetails = newTabDetails.find(({
-            id
-        }) => id === tabId);
-        if (updateTabdetails) {
-            console.log("new tab was updated");
-            var updatedTabArray = newTabDetails.filter(function(el) {
-                return el.id != tab.id;
-            });
-            updatedTabArray.push(tab);
-            newTabDetails = updatedTabArray;
-            console.log("new tab array:", newTabDetails);
-            deleteDuplicatesAfterInitPhase();
-        } else {
-            console.log("old tab was updated", tab);
-            getAllTabs(function(tabs) {
-                const isduplicate = tabs.find(({
-                    url,
-                    id
-                }) => (url === tab.url) && (id !== tab.id));
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+//     if (changeInfo.status && changeInfo.status === "complete") {
+//         console.log("tab updated: ", tab);
+//         const updateTabdetails = newTabDetails.find(({
+//             id
+//         }) => id === tabId);
+//         if (updateTabdetails) {
+//             console.log("new tab was updated");
+//             var updatedTabArray = newTabDetails.filter(function(el) {
+//                 return el.id != tab.id;
+//             });
+//             updatedTabArray.push(tab);
+//             newTabDetails = updatedTabArray;
+//             console.log("new tab array:", newTabDetails);
+//             deleteDuplicatesAfterInitPhase();
+//         } else {
+//             console.log("old tab was updated", tab);
+//             getAllTabs(function(tabs) {
+//                 const isduplicate = tabs.find(({
+//                     url,
+//                     id
+//                 }) => (url === tab.url) && (id !== tab.id));
 
-                if (isduplicate) {
-                    console.log("old tab is duplicate");
-                    closeDuplicateTabs(tab.id);
-                    // update nonduplicateTabinfo
-                    chrome.storage.local.get(['Deduplicate'], function(result) {
-                        if ((['Deduplicate'] in result)) {
-                            var totalduplicatesclosed = result.Deduplicate.totalduplicatesclosed;
-                            totalduplicatesclosed++;
-                            chrome.storage.local.set({
-                                Deduplicate: {
-                                    totalduplicatesclosed,
-                                    nonduplicateTabinfo: result.Deduplicate.nonduplicateTabinfo
-                                }
-                            });
-                        } else {
-                            console.error("SYNC ERROR");
-                        }
-                    });
-                    setBadgeText((tabs.length - 1).toString());
-                }
-            });
-        }
-    }
-});
+//                 if (isduplicate) {
+//                     console.log("old tab is duplicate");
+//                     // closeDuplicateTabs(tab.id);
+//                     // update nonduplicateTabinfo
+//                     chrome.storage.local.get(['Deduplicate'], function(result) {
+//                         if ((['Deduplicate'] in result)) {
+//                             var totalduplicatesclosed = result.Deduplicate.totalduplicatesclosed;
+//                             totalduplicatesclosed++;
+//                             chrome.storage.local.set({
+//                                 Deduplicate: {
+//                                     totalduplicatesclosed,
+//                                     nonduplicateTabinfo: result.Deduplicate.nonduplicateTabinfo
+//                                 }
+//                             });
+//                         } else {
+//                             console.error("SYNC ERROR");
+//                         }
+//                     });
+//                     setBadgeText((tabs.length - 1).toString());
+//                 }
+//             });
+//         }
+//     }
+// });
 
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
     console.log("onRemoved fired: ", tabId);

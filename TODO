@@ -3,6 +3,9 @@ Impt:
     remove history if it is a duplicate
     Default blacklist chrome://*
     Fix open issues
+    donot close options.html as duplicate
+    fix newtab and onupdate functions of background.js (line 204 - 269)
+    Add keyboard shortcuts and about me in option.html
 
 Will not be fixed
     Large number of tabs are opened => check for duplicacy then
@@ -19,11 +22,6 @@ Also,
         link to github repo
 
     In options:
-        What to do when duplicate is found:
-            close and switch
-            close
-            do nothing
-
         Add url/domain to blacklist
         Add option to allow to switch between tabs via search shortcut
         About me:
