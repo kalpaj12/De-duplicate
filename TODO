@@ -7,7 +7,6 @@ Impt:
     fix newtab and onupdate functions of background.js (line 204 - 269)
     Add keyboard shortcuts and about me in option.html
     complete backend part of options.js and popup.js
-    if unsaved changes in options.js, prompt to save before close.
 
 Will not be fixed
     Large number of tabs are opened => check for duplicacy then
