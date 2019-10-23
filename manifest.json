@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "De-duplicate",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "author": "Kalpaj Agrawalla",
     "description": "Auto-close duplicate tabs",
     "minimum_chrome_version": "70",

@@ -5,11 +5,11 @@ var userSettings = [{
     value: false
 }];
 
-var Buttonsave = document.getElementById('save');
-Buttonsave.addEventListener('click', save_options);
+var buttonsave = document.getElementById('save');
+buttonsave.addEventListener('click', save_options);
 
-var ToggleCloseOptionsMenuAfterSave = document.getElementById('close-options-after-save');
-ToggleCloseOptionsMenuAfterSave.addEventListener('click', toggle_triggered);
+var toggleCloseOptionsMenuAfterSave = document.getElementById('close-options-after-save');
+toggleCloseOptionsMenuAfterSave.addEventListener('click', toggle_triggered);
 
 chrome.storage.local.get(['DeduplicateSettings'], function(result) {
     if ((['DeduplicateSettings'] in result)) {

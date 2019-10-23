@@ -1,37 +1,42 @@
 'use strict';
 
-var ClosedduplicateCount = document.getElementById('ClosedduplicateCount');
+var totalDuplicatesClosed = document.getElementById('totalDuplicatesClosed');
+
 chrome.storage.local.get(['Deduplicate'], function(result) {
     if ((['Deduplicate'] in result)) {
         var res = result.Deduplicate.totalduplicatesclosed;
         var value = parseInt(res, 10);
         if (value > 1000) {
-            ClosedduplicateCount.textContent = "Total Duplicates Closed: 1000+";
+            totalDuplicatesClosed.textContent = "Total Duplicates Closed: 1000+";
         } else {
-            ClosedduplicateCount.textContent = "Total Duplicates Closed: " + value;
+            totalDuplicatesClosed.textContent = "Total Duplicates Closed: " + value;
         }
     } else {
-        ClosedduplicateCount.textContent = "Total Duplicates Closed: " + 0;
+        totalDuplicatesClosed.textContent = "Total Duplicates Closed: " + 0;
     }
 });
 
-var urlblacklist = document.getElementById('urlblacklist');
-urlblacklist.addEventListener('click', urlblacklistfn);
+var blacklistedURLs = document.getElementById('blacklistedURLs');
+blacklistedURLs.addEventListener('click', blacklistedURLsfn);
 
-var domainblacklist = document.getElementById('domainblacklist');
-domainblacklist.addEventListener('click', domainblacklistfn);
+var blacklistedDomains = document.getElementById('blacklistedDomains');
+blacklistedDomains.addEventListener('click', blacklistedDomainsfn);
 
 var openPopup = document.getElementById('openPopup');
 openPopup.addEventListener('click', openPopupfn);
 
-var githubpage = document.getElementById('githubpage');
-githubpage.addEventListener('click', githubpagefn);
+var deDuplicateProjectLink = document.getElementById('deDuplicateProjectLink');
+deDuplicateProjectLink.addEventListener('click', deDuplicateProjectLinkfn);
 
-function urlblacklistfn() {
+
+
+
+// Functions
+function blacklistedURLsfn() {
 
 }
 
-function domainblacklistfn() {
+function blacklistedDomainsfn() {
 
 }
 
@@ -39,7 +44,7 @@ function openPopupfn() {
     chrome.runtime.openOptionsPage();
 }
 
-function githubpagefn() {
+function deDuplicateProjectLinkfn() {
     chrome.tabs.create({
         url: "https://github.com/kalpaj12/De-duplicate",
         active: true
