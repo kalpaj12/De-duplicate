@@ -18,7 +18,7 @@ chrome.storage.local.get(['DeduplicateSettings'], function(result) {
         // Init other settings;
         document.getElementById('closeOptionsMenuAfterSave').checked = userSettings.find(({
             id
-        }) => id === 'closeOptionsMenuAfterSave').value;
+        }) => id === "closeOptionsMenuAfterSave").value;
 
     } else {
         chrome.storage.local.set({

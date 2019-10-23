@@ -2,14 +2,8 @@ Impt:
     look into comments at background.js
     remove history if it is a duplicate
     Default blacklist chrome://*
-    Fix open issues
-    donot close options.html as duplicate
-    fix newtab and onupdate functions of background.js (line 204 - 269)
     Add keyboard shortcuts and about me in option.html
     complete backend part of options.js and popup.js
-
-Will not be fixed
-    Large number of tabs are opened => check for duplicacy then
 
 Rightclick:
     Add url/domain to blacklist directly from right click
