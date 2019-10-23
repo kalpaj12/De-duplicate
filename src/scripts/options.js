@@ -1,14 +1,14 @@
 'use strict';
 
 var userSettings = [{
-    id: "close-options-after-save",
+    id: "closeOptionsMenuAfterSave",
     value: false
 }];
 
 var buttonsave = document.getElementById('save');
 buttonsave.addEventListener('click', save_options);
 
-var toggleCloseOptionsMenuAfterSave = document.getElementById('close-options-after-save');
+var toggleCloseOptionsMenuAfterSave = document.getElementById('closeOptionsMenuAfterSave');
 toggleCloseOptionsMenuAfterSave.addEventListener('click', toggle_triggered);
 
 chrome.storage.local.get(['DeduplicateSettings'], function(result) {
@@ -16,9 +16,9 @@ chrome.storage.local.get(['DeduplicateSettings'], function(result) {
         userSettings = result.DeduplicateSettings.userSettings;
 
         // Init other settings;
-        document.getElementById('close-options-after-save').checked = userSettings.find(({
+        document.getElementById('closeOptionsMenuAfterSave').checked = userSettings.find(({
             id
-        }) => id === 'close-options-after-save').value;
+        }) => id === 'closeOptionsMenuAfterSave').value;
 
     } else {
         chrome.storage.local.set({
@@ -38,7 +38,7 @@ function save_options() {
         status.textContent = 'Options saved.';
         var shouldclose = userSettings.find(({
             id
-        }) => id === 'close-options-after-save').value;
+        }) => id === 'closeOptionsMenuAfterSave').value;
         if (shouldclose == true) {
             this.close();
         } else {
