@@ -2,6 +2,14 @@
 
 var greatSuspenderDomain = "chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html";
 
+var nonduplicateTabCount = 0;
+var duplicateTabCount = 0;
+
+var duplicateURLTrackerSet = new Set();
+var duplicateTabinfo = new Array();
+var nonduplicateTabinfo = new Array();
+var newTabDetails = new Array();
+
 chrome.browserAction.setBadgeBackgroundColor({
     color: [0, 0, 0, 255]
 });
@@ -14,120 +22,40 @@ function getAllTabs(callback) {
 
 function closeDuplicateTabs(tabId) {
     chrome.tabs.get(tabId, function(tab) {
-        if (chrome.runtime.lastError) {
-            // This error can be ignored due
-            // to the fact that while cleaning up another tab, this tab was removed
-            // but was not updated to storage.local
-            console.log(chrome.runtime.lastError.message);
-        } else if (tab && tab.id) {
+        if (tab && tab.id) {
             chrome.tabs.remove(tab.id);
         }
     });
 }
 
-// function switchNonDuplicate(tabInfo) {
-//     chrome.tabs.update(tabInfo.duplicateOfid, {
-//         active: true
-//     }, function(tab) {
-//         chrome.windows.update(tab.windowId, {
-//             focused: true
-//         });
-//     });
-// }
+function switchNonDuplicate(tabInfo) {
+    chrome.tabs.update(tabInfo.duplicateOfid, {
+        active: true
+    }, function(tab) {
+        chrome.windows.update(tab.windowId, {
+            focused: true
+        }, function() {
+            closeDuplicateTabs(tabInfo.id);
+        });
+    });
+}
 
-function removeSingleDuplicate(duplicateTabinfo) {
-    // switchNonDuplicate(duplicateTabinfo);
-    closeDuplicateTabs(duplicateTabinfo[0].id);
+function removeSingleDuplicate(duplicateTabinfo, switchtononduplicate) {
+    if (switchtononduplicate)
+        switchNonDuplicate(duplicateTabinfo[0]);
+    else
+        closeDuplicateTabs(duplicateTabinfo[0].id);
 }
 
 function removeMultipleDuplicates(duplicateTabinfo) {
-    duplicateTabinfo.forEach((element, pos, duplicateTabinfo) => {
+    duplicateTabinfo.forEach((element) => {
         closeDuplicateTabs(element.id);
-        if (Object.is(duplicateTabinfo.length - 1, pos)) {
-            // switchNonDuplicate(element);
-        }
     });
 }
 
 function setBadgeText(text) {
     chrome.browserAction.setBadgeText({
         text: text
-    });
-}
-
-function cleanduplicates(newTabDetails) {
-    var totalduplicatesclosed = 0;
-    var duplicateTabCount = 0;
-    var newtabsadded = 0;
-
-    var nonduplicateTabinfo = new Array();
-    var duplicateTabinfo = new Array();
-
-    chrome.storage.local.get(['Deduplicate'], function(result) {
-        if ((['Deduplicate'] in result)) {
-            totalduplicatesclosed += result.Deduplicate.totalduplicatesclosed;
-            nonduplicateTabinfo = result.Deduplicate.nonduplicateTabinfo;
-
-            var chromeCleanupSynchoronous = new Promise((resolve, reject) => {
-                newTabDetails.forEach((element, pos, tabs) => {
-                    if (!element.incognito) {
-                        if (element.url.includes(greatSuspenderDomain)) {
-                            var urlBegin = element.url.indexOf("&uri=");
-                            element.url = element.url.substring(urlBegin + 5);
-                        }
-
-                        var tabInfo = {
-                            id: element.id,
-                            url: element.url,
-                            windowId: element.windowId,
-                            duplicateOfid: element.id
-                        };
-
-                        var isDuplicate = nonduplicateTabinfo.find(({
-                            url,
-                            id
-                        }) => (url == tabInfo.url) && (id != tabInfo.id));
-
-                        if (isDuplicate) {
-                            console.log(element, isDuplicate);
-                            duplicateTabinfo.push(tabInfo);
-                            totalduplicatesclosed++;
-                            duplicateTabCount++;
-                        } else {
-                            nonduplicateTabinfo.push(tabInfo);
-                            newtabsadded++;
-                        }
-                    }
-                    if (pos === tabs.length - 1) resolve();
-                });
-            });
-
-            chromeCleanupSynchoronous.then(() => {
-
-                // requires fix
-                chrome.browserAction.getBadgeText({}, function(result) {
-                    var value = parseInt(result, 10);
-                    value -= duplicateTabCount;
-                    value += newtabsadded;
-                    setBadgeText(value.toString());
-                });
-
-                chrome.storage.local.set({
-                    Deduplicate: {
-                        totalduplicatesclosed,
-                        nonduplicateTabinfo,
-                    }
-                });
-
-                if (duplicateTabCount == 1) {
-                    removeSingleDuplicate(duplicateTabinfo);
-                } else if (duplicateTabCount > 1) {
-                    removeMultipleDuplicates(duplicateTabinfo);
-                }
-            });
-        } else {
-            console.error("SYNC ERROR");
-        }
     });
 }
 
@@ -162,15 +90,8 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.runtime.openOptionsPage();
 
     getAllTabs(function(tabs) {
-        var nonduplicateTabCount = 0;
-        var duplicateTabCount = 0;
-
-        var duplicateURLTrackerSet = new Set();
-        var duplicateTabinfo = new Array();
-        var nonduplicateTabinfo = new Array();
-
         var chromeCleanupSynchoronous = new Promise((resolve, reject) => {
-            tabs.forEach((element, pos, tabs) => {
+            tabs.forEach((element, pos) => {
                 if (!element.incognito) {
                     if (element.url.includes(greatSuspenderDomain)) {
                         var urlBegin = element.url.indexOf("&uri=");
@@ -184,17 +105,19 @@ chrome.runtime.onInstalled.addListener(function() {
                         duplicateOfid: element.id
                     };
 
-                    if (!duplicateURLTrackerSet.has(tabInfo.url)) {
-                        duplicateURLTrackerSet.add(tabInfo.url);
-                        nonduplicateTabinfo.push(tabInfo);
-                        nonduplicateTabCount++;
-                    } else {
-                        const tab = nonduplicateTabinfo.find(({
-                            url
-                        }) => url === tabInfo.url);
-                        tabInfo.duplicateOfid = tab.id;
-                        duplicateTabinfo.push(tabInfo);
-                        duplicateTabCount++;
+                    if (tabInfo.url) {
+                        if (!duplicateURLTrackerSet.has(tabInfo.url)) {
+                            duplicateURLTrackerSet.add(tabInfo.url);
+                            nonduplicateTabinfo.push(tabInfo);
+                            nonduplicateTabCount++;
+                        } else {
+                            const tab = nonduplicateTabinfo.find(({
+                                url
+                            }) => url === tabInfo.url);
+                            tabInfo.duplicateOfid = tab.id;
+                            duplicateTabinfo.push(tabInfo);
+                            duplicateTabCount++;
+                        }
                     }
                 }
                 if (pos === tabs.length - 1) resolve();
@@ -203,10 +126,6 @@ chrome.runtime.onInstalled.addListener(function() {
 
         chromeCleanupSynchoronous.then(() => {
             setBadgeText(nonduplicateTabCount.toString());
-
-            // The below line is for debug purpose, doesn't affect anything.
-            chrome.storage.local.remove(['Deduplicate']);
-
             chrome.storage.local.set({
                 Deduplicate: {
                     totalduplicatesclosed: duplicateTabCount,
@@ -215,7 +134,7 @@ chrome.runtime.onInstalled.addListener(function() {
             });
 
             if (duplicateTabCount == 1) {
-                removeSingleDuplicate(duplicateTabinfo);
+                removeSingleDuplicate(duplicateTabinfo, false);
             } else if (duplicateTabCount > 1) {
                 removeMultipleDuplicates(duplicateTabinfo);
             }
@@ -224,79 +143,46 @@ chrome.runtime.onInstalled.addListener(function() {
 });
 
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
-    if (!removeInfo.isWindowClosing) {
-        console.log("Tab is closing: ", tabId, removeInfo);
+    console.log("Tab is closing", tabId);
+    var tab = nonduplicateTabinfo.find(({
+        id
+    }) => id == tabId);
 
-        // A tab might be closed manually or via this extension
-        chrome.storage.local.get(['Deduplicate'], function(result) {
-            if ((['Deduplicate'] in result)) {
-                var closedTab = result.Deduplicate.nonduplicateTabinfo.find(({
-                    id
-                }) => id == tabId);
-                if (closedTab) {
-                    // This tab was closed manually and was a previous non-duplicate;
-                    var nonduplicateTabinfo = result.Deduplicate.nonduplicateTabinfo.filter(function(element) {
-                        return element.id !== tabId;
-                    });
-                    chrome.storage.local.set({
-                        Deduplicate: {
-                            totalduplicatesclosed: result.Deduplicate.totalduplicatesclosed,
-                            nonduplicateTabinfo,
-                        }
-                    });
-                    setBadgeText(nonduplicateTabinfo.length.toString());
-                } else {
-                    // This extension cleaned up a tab;
-                }
-            } else {
-                console.error("SYNC ERROR");
-            }
+    if (tab) {
+        nonduplicateTabinfo = nonduplicateTabinfo.filter(function(t) {
+            return t.id !== tab.id;
         });
+        setBadgeText(nonduplicateTabinfo.length.toString());
+    } else {
+        console.log("Extension cleaned up a duplicate");
     }
 });
 
-chrome.windows.onRemoved.addListener(function(windowId) {
-    console.log("Window is closing", windowId);
-    chrome.storage.local.get(['Deduplicate'], function(result) {
-        if ((['Deduplicate'] in result)) {
-            chrome.windows.getAll({
-                populate: true
-            }, function(windows) {
-                if (windows.length == 0) {
-                    chrome.storage.local.set({
-                        Deduplicate: {
-                            totalduplicatesclosed: result.Deduplicate.totalduplicatesclosed,
-                            nonduplicateTabinfo: []
-                        }
-                    });
-                } else {
-                    var nonduplicateTabinfo = result.Deduplicate.nonduplicateTabinfo.filter(function(element) {
-                        return element.windowId !== windowId;
-                    });
-                    chrome.storage.local.set({
-                        Deduplicate: {
-                            totalduplicatesclosed: result.Deduplicate.totalduplicatesclosed,
-                            nonduplicateTabinfo,
-                        }
-                    });
-                    setBadgeText(nonduplicateTabinfo.length.toString());
-                }
-            });
-        } else {
-            console.error("SYNC ERROR");
-        }
+chrome.windows.onRemoved.addListener(function(wId) {
+    console.log("Window is closing", wId);
+    nonduplicateTabinfo = nonduplicateTabinfo.filter(function(tab) {
+        return tab.windowId !== wId;
     });
+    setBadgeText(nonduplicateTabinfo.length.toString());
 });
 
-var newTabDetails = new Array();
 chrome.tabs.onCreated.addListener(function(tab) {
     console.log("new tab added:", tab);
     newTabDetails.push(tab);
 });
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    // What if a previous non-duplicate tab is updated to a duplicate?
-    if (changeInfo.status && changeInfo.status === "complete") {
+    if (tab.url.includes(greatSuspenderDomain)) {
+        var urlBegin = tab.url.indexOf("&uri=");
+        tab.url = tab.url.substring(urlBegin + 5);
+    }
+    if (changeInfo.discarded && changeInfo.discarded == true) {
+        var stab = nonduplicateTabinfo.find(({
+            url
+        }) => url == tab.url);
+        console.log("Discarded Tab", stab.id, tab.id);
+        stab.id = tab.id;
+    } else if (changeInfo.status && changeInfo.status === "complete") {
         var statusTab = newTabDetails.find(({
             id
         }) => id == tabId);
@@ -304,24 +190,67 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         if (statusTab) {
             statusTab.status = "complete";
             statusTab.url = tab.url;
-        }
 
-        const iscomplete = x => x.status == "complete";
+            var statustabdupcheck = nonduplicateTabinfo.find(({
+                url,
+                id
+            }) => url === statusTab.url && id !== tab.id);
 
-        if (newTabDetails.length > 0) {
-            if (newTabDetails.every(iscomplete)) {
-                console.log("All tabs have loaded successfully");
-                cleanduplicates(newTabDetails);
-                chrome.browserAction.getBadgeText({}, function(result) {
-                    var value = parseInt(result, 10);
-                    console.log(value, newTabDetails.length);
-                    value += newTabDetails.length;
-                    setBadgeText(value.toString());
-                    newTabDetails = [];
+            if (statustabdupcheck) {
+
+                var removestatusTab = {
+                    id: statusTab.id,
+                    url: statusTab.url,
+                    windowId: statusTab.windowId,
+                    duplicateOfid: statustabdupcheck.id
+                };
+                removeSingleDuplicate([removestatusTab], true);
+                newTabDetails = newTabDetails.filter(function(ntab) {
+                    return ntab.id !== statusTab.id
                 });
             } else {
-                console.log("Few tabs are still loading");
+                var stabInfo = {
+                    id: statusTab.id,
+                    url: statusTab.url,
+                    windowId: statusTab.windowId,
+                    duplicateOfid: statusTab.id
+                };
+                console.log("pushed to nonduplicateTabinfo");
+                nonduplicateTabinfo.push(stabInfo);
+                newTabDetails = newTabDetails.filter(function(ntab) {
+                    return ntab.id !== stabInfo.id
+                });
+            }
+        } else {
+            console.log("Non duplicate tab updated");
+            var tabdupcheck = nonduplicateTabinfo.find(({
+                url,
+                id
+            }) => url === tab.url && id !== tab.id);
+
+            if (tabdupcheck) {
+                nonduplicateTabinfo = nonduplicateTabinfo.filter(function(ntab) {
+                    return ntab.id !== tab.id
+                });
+                var removethistab = {
+                    id: tab.id,
+                    url: tab.url,
+                    windowId: tab.windowId,
+                    duplicateOfid: tabdupcheck.id
+                };
+                removeSingleDuplicate([removethistab], true);
+            } else {
+                var thistab = nonduplicateTabinfo.find(({
+                    id
+                }) => id === tab.id);
+                if (thistab) {
+                    thistab.url = tab.url;
+                    thistab.status = "complete";
+                } else {
+                    console.error("The tab was either moved from another window, and then its property was changed, or some other shit happened");
+                }
             }
         }
     }
+    setBadgeText(nonduplicateTabinfo.length.toString());
 });
