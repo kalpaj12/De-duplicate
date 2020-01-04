@@ -1,4 +1,7 @@
 Impt:
+    Right click doesnt work
+    Refactor code => variable names
+    total duplicates closed is not updated
     handle if tab is rearranged! from one window to another
     Default blacklist chrome://*
     Add keyboard shortcuts and about me in option.html
