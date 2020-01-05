@@ -1,5 +1,7 @@
 Impt:
-    Right click doesnt work
+    persistent => false
+    How to find out if multiple tabs are being opened simultaneously
+    Right click doesn't work
     Refactor code => variable names
     total duplicates closed is not updated
     handle if tab is rearranged! from one window to another
@@ -15,7 +17,7 @@ Complete popup and options page layout
 Also,
     In popup:
         Store global total closed duplicates count
-        view blacklisted sites && domains (seperate array)
+        view blacklisted sites && domains (separate array)
         link to github repo
 
     In options:
