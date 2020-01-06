@@ -2,7 +2,6 @@ Impt:
     persistent => false
     How to find out if multiple tabs are being opened simultaneously
     total duplicates closed is not updated
-    handle if tab is rearranged! from one window to another
     Default blacklist chrome://*
     Add keyboard shortcuts and about me in option.html
     complete backend part of options.js and popup.js
