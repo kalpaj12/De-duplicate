@@ -1,8 +1,6 @@
 Impt:
     persistent => false
     How to find out if multiple tabs are being opened simultaneously
-    Right click doesn't work
-    Refactor code => variable names
     total duplicates closed is not updated
     handle if tab is rearranged! from one window to another
     Default blacklist chrome://*
