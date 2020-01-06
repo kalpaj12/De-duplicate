@@ -37,7 +37,7 @@ chrome.browserAction.setBadgeBackgroundColor({
 
 function setBadgeText(text) {
     chrome.browserAction.setBadgeText({
-        text: text
+        text
     });
 }
 
@@ -76,7 +76,7 @@ function removeSingleDuplicate(duplicatesArr, changefocus) {
         closeDuplicateTab(duplicatesArr[0].id);
 }
 
-function removeDuplicates(duplicatesArr) {
+function removeMultipleDuplicates(duplicatesArr) {
     duplicatesArr.forEach((tab, pos) => {
         if (pos !== duplicatesArr.length - 1)
             closeDuplicateTab(tab.id);
@@ -134,7 +134,7 @@ chrome.runtime.onInstalled.addListener(function() {
         asyncInit.then(() => {
             setBadgeText(nonduplicateArr.length.toString());
             if (duplicatesArr.length) {
-                removeDuplicates(duplicatesArr);
+                removeMultipleDuplicates(duplicatesArr);
             }
         });
     });
