@@ -1,0 +1,68 @@
+<!--
+    Using TheGreatSuspender's Option format
+    https://github.com/deanoemcke/thegreatsuspender/
+-->
+
+<!doctype html>
+<html>
+
+<head>
+    <link type="text/css" href="../css/global_style.css" rel="stylesheet">
+    <link type="text/css" href="../css/options.css" rel="stylesheet">
+    <title>De-duplicate Options</title>
+</head>
+
+<body>
+
+    <div class="mainContent">
+
+        <div class="pageHeader">
+            <h1 id="options-heading">De-Duplicate Options Menu</h1>
+        </div>
+
+        <div class="contentNav">
+            <ul>
+                <li>
+                    <a class="active" href='options.html'>Advanced Options</a>
+                </li>
+                <li>
+                    <a href='shortcuts.html'>Keyboard Shortcuts</a>
+                </li>
+                <li>
+                    <a href="aboutme.html">About Me</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <div class="sub-section">
+                <!-- <h2>Sub-section Header</h2> -->
+                <div class="formRow">
+                    <input class="toggle" id="closeOptionsMenuAfterSave" type="checkbox">
+                    <label class="cbLabel"> Close options menu immediately after clicking on save.</label>
+                </div>
+                <div class="formRow">
+                    <input class="toggle" id="" type="checkbox">
+                    <label class="cbLabel"> Activate tab search.</label>
+                </div>
+                <div class="formRow">
+                    <label id="whitelistLbl" for="blacklist">Blacklisted Domains/URLs:</label>
+                    <i>Enter Domains/URLs in the below text-area, separated via a new-line</i>
+                    <textarea id="blacklist" class="option" rows="10" cols="50"></textarea>
+                    <a id="testWhitelistBtn" href='#whitelistLbl'></a>
+                </div>
+                <button id="save">Save</button>
+                <div id="status"></div>
+
+                <br>
+                <br>
+
+                <label class="cbLabel">Click on save, to apply changes. Unsaved changes will be discarded.</label>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="../scripts/options.js"></script>
+
+</html>

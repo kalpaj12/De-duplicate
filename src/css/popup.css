@@ -1,0 +1,100 @@
+/**
+
+                - - /|_/|      .-------------------.
+  - _______________| @.@|     /      Styles by      )
+-- (______         >\_C/< ---/    Liam Johnston    /
+  -  -   / ______  _/____)  (   @liamjohnstonnz   /
+ -  -   / /\ \   \ \         `-------------------'
+   - (_/  \_) - \_)
+
+Taken from TheGreatSuspender
+https: //github.com/deanoemcke/thegreatsuspender/
+**/
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol';
+    color: #444;
+    padding: 0;
+    margin: 0;
+    min-width: 325px;
+    position: relative;
+    font-size: 15px;
+    background: rgb(255, 255, 255);
+}
+
+#statusDetail a {
+    color: #ffffff;
+}
+
+#header {
+    padding: 15px;
+    background: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+}
+
+.group {
+    padding: 10px 0;
+}
+
+.group:not(:last-of-type) {
+    border-bottom: 1px solid #ccc;
+}
+
+.menuOption {
+    line-height: 2em;
+    font-size: 16px;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 0 15px;
+}
+
+.menuOption:hover .optionText {
+    text-decoration: underline;
+}
+
+/* dark theme for night lurkers */
+.dark {
+    background: #353535;
+    color: #b8b8b8;
+}
+
+.dark .group {
+    border-color: #555;
+}
+
+button {
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    background: #333;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    text-decoration: underline;
+    background: transparent;
+    color: black;
+    border: 1px solid black;
+}
