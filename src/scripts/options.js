@@ -1,4 +1,38 @@
-'use strict';
+"use strict";
+
+function saveOptions() {
+    console.log("save clicked", userSettings);
+    chrome.storage.local.set({
+        DeduplicateSettings: {
+            userSettings
+        }
+    }, function() {
+        var status = document.getElementById('status');
+        status.textContent = 'Options saved.';
+        var shouldclose = userSettings.find(({
+            id
+        }) => id === "closeOptionsMenuAfterSave").value;
+        if (shouldclose === true) {
+            this.close();
+        } else {
+            setTimeout(function() {
+                status.textContent = '';
+            }, 1000);
+        }
+    });
+}
+
+function toggleTriggered(ToggleElement) {
+    console.log("Toggle triggered on", ToggleElement.srcElement.id);
+    // console.log("Toggle triggered on this.id", this.id);
+
+    var x = userSettings.find(({
+        id
+    }) => id === ToggleElement.srcElement.id);
+
+    x.value = ToggleElement.srcElement.checked;
+    console.log("After toggle userSetting is", userSettings);
+}
 
 var userSettings = [{
     id: "closeOptionsMenuAfterSave",
@@ -6,10 +40,10 @@ var userSettings = [{
 }];
 
 var buttonsave = document.getElementById('save');
-buttonsave.addEventListener('click', save_options);
+buttonsave.addEventListener('click', saveOptions);
 
 var toggleCloseOptionsMenuAfterSave = document.getElementById('closeOptionsMenuAfterSave');
-toggleCloseOptionsMenuAfterSave.addEventListener('click', toggle_triggered);
+toggleCloseOptionsMenuAfterSave.addEventListener('click', toggleTriggered);
 
 chrome.storage.local.get(['DeduplicateSettings'], function(result) {
     if ((['DeduplicateSettings'] in result)) {
@@ -26,37 +60,3 @@ chrome.storage.local.get(['DeduplicateSettings'], function(result) {
         });
     }
 });
-
-function save_options() {
-    console.log("save clicked", userSettings);
-    chrome.storage.local.set({
-        DeduplicateSettings: {
-            userSettings
-        }
-    }, function() {
-        var status = document.getElementById('status');
-        status.textContent = 'Options saved.';
-        var shouldclose = userSettings.find(({
-            id
-        }) => id === 'closeOptionsMenuAfterSave').value;
-        if (shouldclose == true) {
-            this.close();
-        } else {
-            setTimeout(function() {
-                status.textContent = '';
-            }, 1000);
-        }
-    });
-}
-
-function toggle_triggered(ToggleElement) {
-    console.log("Toggle triggered on", ToggleElement.srcElement.id);
-    // console.log("Toggle triggered on this.id", this.id);
-
-    var x = userSettings.find(({
-        id
-    }) => id === ToggleElement.srcElement.id);
-
-    x.value = ToggleElement.srcElement.checked;
-    console.log("After toggle userSetting is", userSettings);
-}

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var duplicatesArr = new Array();
 var nonduplicateArr = new Array();
@@ -23,7 +23,7 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
 
 const greatSuspenderURL = "chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html";
 
-function URLCleanUp(tab) {
+function urlCleanUp(tab) {
     if (tab.url.includes(greatSuspenderURL)) {
         var urlBegin = tab.url.indexOf("&uri=");
         tab.url = tab.url.substring(urlBegin + 5);
@@ -101,7 +101,7 @@ chrome.runtime.onInstalled.addListener(function() {
         var asyncInit = new Promise((resolve, reject) => {
             tabs.forEach((tab) => {
                 if (!tab.incognito) {
-                    tab = URLCleanUp(tab);
+                    tab = urlCleanUp(tab);
 
                     var tabInfo = {
                         id: tab.id,
@@ -170,8 +170,8 @@ chrome.tabs.onCreated.addListener(function(tab) {
 });
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    tab = URLCleanUp(tab);
-    if (changeInfo.discarded && changeInfo.discarded == true) {
+    tab = urlCleanUp(tab);
+    if (changeInfo.discarded && changeInfo.discarded === true) {
         var nonduplicateTab = nonduplicateArr.find(({
             url
         }) => url == tab.url);
@@ -208,7 +208,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                     duplicateOfid: updatednewTab.id
                 });
                 newTabsArr = newTabsArr.filter(function(tab) {
-                    return tab.id !== updatednewTab.id
+                    return tab.id !== updatednewTab.id;
                 });
             }
         } else {
@@ -220,7 +220,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
             if (isduplicateafterupdate) {
                 nonduplicateArr = nonduplicateArr.filter(function(tab) {
-                    return tab.id !== tabId
+                    return tab.id !== tabId;
                 });
                 removeSingleDuplicate([{
                     id: tab.id,
