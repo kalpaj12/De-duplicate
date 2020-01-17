@@ -38,5 +38,22 @@
         "tabs",
         "storage",
         "contextMenus"
-    ]
+    ],
+    "commands": {
+        "toggle-feature-search-tab": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+L",
+                "mac": "Command+Shift+L",
+                "linux": "Ctrl+Shift+L"
+            },
+            "description": "Search for a particular tab"
+        },
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+K",
+                "mac": "Command+Shift+K",
+                "linux": "Ctrl+Shift+K"
+            }
+        }
+    }
 }
