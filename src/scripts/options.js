@@ -1,7 +1,14 @@
 "use strict";
 
+var userSettings = [
+  {
+    id: "closeOptionsMenuAfterSave",
+    value: false
+  }
+];
+
 function saveOptions() {
-  console.log("save clicked", userSettings);
+  // console.log("save clicked", userSettings);
   chrome.storage.local.set(
     {
       DeduplicateSettings: {
@@ -26,7 +33,7 @@ function saveOptions() {
 }
 
 function toggleTriggered(ToggleElement) {
-  console.log("Toggle triggered on", ToggleElement.srcElement.id);
+  // console.log("Toggle triggered on", ToggleElement.srcElement.id);
   // console.log("Toggle triggered on this.id", this.id);
 
   var x = userSettings.find(({ id }) => id === ToggleElement.srcElement.id);
@@ -34,13 +41,6 @@ function toggleTriggered(ToggleElement) {
   x.value = ToggleElement.srcElement.checked;
   console.log("After toggle userSetting is", userSettings);
 }
-
-var userSettings = [
-  {
-    id: "closeOptionsMenuAfterSave",
-    value: false
-  }
-];
 
 var buttonsave = document.getElementById("save");
 buttonsave.addEventListener("click", saveOptions);

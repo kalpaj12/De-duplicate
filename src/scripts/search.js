@@ -3,7 +3,7 @@ chrome.runtime.sendMessage(
     action: "nonDuplicateTabs"
   },
   function(response) {
-    console.log(response.nonduplicateArr);
+    // console.log(response.nonduplicateArr);
   }
 );
 

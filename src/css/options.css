@@ -3,49 +3,49 @@
 *  src = https://codepen.io/vrsotto/pen/qGpzeE
 **/
 input.toggle {
-    position: relative;
-    appearance: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    width: 35px !important;
-    height: 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    background: #333;
-    top: 9px;
-    transition: box-shadow 0.3s ease-in-out, padding 0.25s ease-in-out;
-    transition-delay: 0.1s, 0s;
+  position: relative;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  width: 35px !important;
+  height: 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  background: #333;
+  top: 9px;
+  transition: box-shadow 0.3s ease-in-out, padding 0.25s ease-in-out;
+  transition-delay: 0.1s, 0s;
 }
 
 input.toggle:focus {
-    border: 0;
-    outline: 0;
+  border: 0;
+  outline: 0;
 }
 
 input.toggle:checked {
-    transition-delay: 0s, 0s;
-    box-shadow: inset 0 0 0 2.62857em #00c169 !important;
-    padding-left: 15px;
+  transition-delay: 0s, 0s;
+  box-shadow: inset 0 0 0 2.62857em #00c169 !important;
+  padding-left: 15px;
 }
 
 input.toggle:before {
-    display: inline-block;
-    height: 14px;
-    width: 14px;
-    margin: 3px;
-    background-color: #fff;
-    border-radius: 2.1em;
-    transition: all 0.1s ease 0.1s;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+  margin: 3px;
+  background-color: #fff;
+  border-radius: 2.1em;
+  transition: all 0.1s ease 0.1s;
 }
 
 input.toggle:before,
 input.toggle:after {
-    content: "";
-    display: block;
+  content: "";
+  display: block;
 }
 
 input.toggle:active::before {
-    transition: all 0.1s ease 0.05s;
+  transition: all 0.1s ease 0.05s;
 }
 
 /**
@@ -53,33 +53,32 @@ input.toggle:active::before {
 *  src = https://codepen.io/vrsotto/pen/qGpzeE
 **/
 
-
 /**
     @save button start
 **/
 button {
-    margin-top: 5px;
-    margin-left: 5px;
-    padding: 5px 10px;
-    border: 1px solid transparent;
-    background: #333;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s;
+  margin-top: 5px;
+  margin-left: 5px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  background: #333;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
 button:hover {
-    text-decoration: underline;
-    background: #ffffff;
-    color: black;
-    border: 1px solid black;
+  text-decoration: underline;
+  background: #ffffff;
+  color: black;
+  border: 1px solid black;
 }
 
 button:active {
-    color: white;
-    background: #333;
-    transition-duration: 0.1s;
+  color: white;
+  background: #333;
+  transition-duration: 0.1s;
 }
 
 /**

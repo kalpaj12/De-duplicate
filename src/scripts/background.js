@@ -7,13 +7,13 @@ var newTabsArr = new Array();
 
 const rightclickOptions = {
   blacklist: "Blacklist options",
-  visit_github: "View project on GitHub"
+  visitProjectGithub: "View project on GitHub"
 };
 
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
   if (info.menuItemId === "blacklist") {
     chrome.runtime.openOptionsPage();
-  } else if (info.menuItemId === "visit_github") {
+  } else if (info.menuItemId === "visitProjectGithub") {
     chrome.tabs.create({
       url: "https://github.com/kalpaj12/De-duplicate",
       active: true
@@ -256,7 +256,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 });
 
 chrome.commands.onCommand.addListener(function(command) {
-  console.log(command);
+  // console.log(command);
   if (command == "toggle-feature-search-tab") {
     chrome.windows.create(
       { url: "src/html/search.html", type: "popup" },
