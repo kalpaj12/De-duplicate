@@ -39,7 +39,7 @@ function toggleTriggered(ToggleElement) {
   var x = userSettings.find(({ id }) => id === ToggleElement.srcElement.id);
 
   x.value = ToggleElement.srcElement.checked;
-  console.log("After toggle userSetting is", userSettings);
+  // console.log("After toggle userSetting is", userSettings);
 }
 
 var buttonsave = document.getElementById("save");
