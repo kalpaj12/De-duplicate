@@ -264,12 +264,3 @@ chrome.commands.onCommand.addListener(function(command) {
     );
   }
 });
-
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.action.localeCompare("nonDuplicateTabs") === 0) {
-    sendResponse({
-      nonduplicateArr
-    });
-  }
-  return true;
-});
