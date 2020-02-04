@@ -24,9 +24,8 @@ Also,
 update README
     Add all additional info section
     Move note: greatsuspender to additional info
-    add chrome://extensions as a clickable url
+    add chrome://extensions as a clickable url in the readme
 
 Upcoming Features:
-    Allow to switch between tabs via search shortcut
     Cross platform
         Once cross platform is done, add to README

@@ -11,7 +11,7 @@ window.setInterval(() => {
     tabs = alltabs;
     // console.log(tabs);
   });
-}, 3000);
+}, 2000);
 
 var contentlist = document.getElementById("content-list");
 var searchBox = document.getElementById("searchbox");
